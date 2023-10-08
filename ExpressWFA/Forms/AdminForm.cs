@@ -80,15 +80,22 @@ namespace ExpressWFA.Forms
         {
             if (e.ColumnIndex == dataGrid.Columns["Delete"].Index && e.RowIndex >= 0)
             {
-                var userId = (int)dataGrid.Rows[e.RowIndex].Cells["Id"].Value;
-                DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this user?", "Confirm Deletion",
-                    MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
+                try
                 {
-                    await _userService.DeleteUser(userId);
-               //     dataGrid.Rows.RemoveAt(e.RowIndex);
+                    var userId = (int)dataGrid.Rows[e.RowIndex].Cells["Id"].Value;
+                    DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this user?", "Confirm Deletion",
+                        MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        await _userService.DeleteUser(userId);
+                    }
+                    refreshData();
                 }
-                refreshData();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+              
             }
         }
         private void StartLoading()
